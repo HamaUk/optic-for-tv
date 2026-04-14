@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ئۆپتیک تیڤی پرۆ</string>
+    <string name="login_title">ئۆپتیک تیڤی پرۆ</string>
+    <string name="login_subtitle">کۆدی چالاککردن بنووسە</string>
+    <string name="code_placeholder">•••• •••• ••••</string>
+    <string name="keypad_clear">سڕینەوە</string>
+    <string name="keypad_ok">دڵنیا</string>
+    <string name="keypad_loading">چاوەڕوان بە…</string>
+    <string name="error_invalid_code">کۆدەکە نادروستە یان بەسەرچووە</string>
+    <string name="error_connection">هەڵەی پەیوەندی: %1$s</string>
+    <string name="live_tv">تلەڤزیۆنی ڕاستەوخۆ</string>
+    <string name="category_count_format">(%1$d)</string>
+    <string name="tv_badge">TV</string>
+    <string name="hd_bitrate_format">HD | %1$s</string>
+    <string name="select_channel_preview">کەناڵێک هەڵبژێرە بۆ بینین</string>
+    <string name="program_guide">بەرنامەی پەخش</string>
+    <string name="stat_resolution">ڕوونکردنەوە</string>
+    <string name="stat_codec">کۆدەک</string>
+    <string name="stat_bitrate">تێکڕەی بیت</string>
+    <string name="stat_fps">FPS</string>
+    <string name="epg_item_1_time">٠٠:٠٠ - ٠١:٠٠</string>
+    <string name="epg_item_1_title">فیلمی نێوەڕەت</string>
+    <string name="epg_item_2_time">٠١:٠٠ - ٠٢:٠٠</string>
+    <string name="epg_item_2_title">هەواڵی جیهانی ئەمڕۆ</string>
+    <string name="playback_error">هەڵەی پەخش: %1$s</string>
+    <string name="playback_invalid_url">بەستەری ئەم کەناڵە نادروستە</string>
+</resources>

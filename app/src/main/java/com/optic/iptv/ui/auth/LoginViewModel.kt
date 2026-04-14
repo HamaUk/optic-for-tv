@@ -1,8 +1,10 @@
 package com.optic.iptv.ui.auth
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.FirebaseDatabase
+import com.optic.iptv.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -16,7 +18,7 @@ data class LoginState(
     val isSuccess: Boolean = false
 )
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(application: Application) : AndroidViewModel(application) {
     private val _uiState = MutableStateFlow(LoginState())
     val uiState: StateFlow<LoginState> = _uiState
 
@@ -47,14 +49,14 @@ class LoginViewModel : ViewModel() {
             try {
                 val dbRef = FirebaseDatabase.getInstance().getReference("sync/global/loginCodes")
                 val snapshot = dbRef.get().await()
-                
+
                 val normalizedInput = code.trim().lowercase()
                 var found = false
                 val now = Instant.now()
 
                 snapshot.children.forEach { child ->
                     val item = child.value as? Map<*, *>
-                    val active = item?.get("active") != false // Default to active if field missing
+                    val active = item?.get("active") != false
                     val dbCode = item?.get("code")?.toString()?.trim()?.lowercase() ?: ""
                     val expiresAt = item?.get("expiresAt")?.toString()
 
@@ -67,8 +69,7 @@ class LoginViewModel : ViewModel() {
                                 if (now.isBefore(expiry)) {
                                     found = true
                                 }
-                            } catch (e: Exception) {
-                                // Treat malformed dates as non-expired if active
+                            } catch (_: Exception) {
                                 found = true
                             }
                         }
@@ -78,10 +79,19 @@ class LoginViewModel : ViewModel() {
                 if (found) {
                     _uiState.value = _uiState.value.copy(isLoading = false, isSuccess = true)
                 } else {
-                    _uiState.value = _uiState.value.copy(isLoading = false, error = "Invalid or expired code")
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = getApplication<Application>().getString(R.string.error_invalid_code)
+                    )
                 }
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(isLoading = false, error = "Connection error: ${e.message}")
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    error = getApplication<Application>().getString(
+                        R.string.error_connection,
+                        e.message.orEmpty()
+                    )
+                )
             }
         }
     }

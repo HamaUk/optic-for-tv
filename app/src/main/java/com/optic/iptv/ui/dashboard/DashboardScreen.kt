@@ -15,11 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.tv.material3.*
+import com.optic.iptv.R
 import com.optic.iptv.data.model.Category
 import com.optic.iptv.data.model.Channel
 import com.optic.iptv.ui.theme.*
@@ -67,14 +69,28 @@ fun DashboardScreen(
                         ChannelCard(
                             channel = channel,
                             isSelected = state.selectedChannel?.id == channel.id,
-                            onClick = { viewModel.selectChannel(channel) }
+                            onClick = { viewModel.selectChannel(channel) },
+                            tvBadge = stringResource(R.string.tv_badge),
+                            bitrateLine = stringResource(R.string.hd_bitrate_format, channel.bitrate)
                         )
                     }
                 }
             }
 
             Column(modifier = Modifier.weight(1.5f).padding(16.dp)) {
-                PreviewSection(selectedChannel = state.selectedChannel)
+                PreviewSection(
+                    selectedChannel = state.selectedChannel,
+                    selectChannelHint = stringResource(R.string.select_channel_preview),
+                    programGuideTitle = stringResource(R.string.program_guide),
+                    statResolution = stringResource(R.string.stat_resolution),
+                    statCodec = stringResource(R.string.stat_codec),
+                    statBitrate = stringResource(R.string.stat_bitrate),
+                    statFps = stringResource(R.string.stat_fps),
+                    epg1Time = stringResource(R.string.epg_item_1_time),
+                    epg1Title = stringResource(R.string.epg_item_1_title),
+                    epg2Time = stringResource(R.string.epg_item_2_time),
+                    epg2Title = stringResource(R.string.epg_item_2_title)
+                )
             }
         }
     }
@@ -93,7 +109,7 @@ private fun CategorySidebar(
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
-                text = "LIVE TV",
+                text = stringResource(R.string.live_tv),
                 style = MaterialTheme.typography.labelLarge.copy(
                     fontWeight = FontWeight.Bold,
                     color = PrimaryGold,
@@ -133,7 +149,7 @@ private fun CategorySidebar(
                             )
                             Spacer(modifier = Modifier.weight(1f))
                             Text(
-                                text = "(${category.count})",
+                                text = stringResource(R.string.category_count_format, category.count),
                                 style = MaterialTheme.typography.labelLarge,
                                 color = White.copy(alpha = 0.4f)
                             )
@@ -150,7 +166,9 @@ private fun CategorySidebar(
 private fun ChannelCard(
     channel: Channel,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    tvBadge: String,
+    bitrateLine: String
 ) {
     Surface(
         onClick = onClick,
@@ -176,7 +194,7 @@ private fun ChannelCard(
                 modifier = Modifier.size(56.dp).background(PureBlack, RoundedCornerShape(8.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "TV", color = PrimaryGold.copy(alpha = 0.5f))
+                Text(text = tvBadge, color = PrimaryGold.copy(alpha = 0.5f))
             }
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -188,7 +206,7 @@ private fun ChannelCard(
                     color = White
                 )
                 Text(
-                    text = "HD | ${channel.bitrate}",
+                    text = bitrateLine,
                     style = MaterialTheme.typography.labelLarge,
                     color = White.copy(alpha = 0.4f)
                 )
@@ -199,7 +217,19 @@ private fun ChannelCard(
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
-private fun PreviewSection(selectedChannel: Channel?) {
+private fun PreviewSection(
+    selectedChannel: Channel?,
+    selectChannelHint: String,
+    programGuideTitle: String,
+    statResolution: String,
+    statCodec: String,
+    statBitrate: String,
+    statFps: String,
+    epg1Time: String,
+    epg1Title: String,
+    epg2Time: String,
+    epg2Title: String
+) {
     Column(modifier = Modifier.fillMaxSize()) {
         Box(
             modifier = Modifier
@@ -215,7 +245,7 @@ private fun PreviewSection(selectedChannel: Channel?) {
                     modifier = Modifier.fillMaxSize()
                 )
             } else {
-                Text("Select a channel to preview", color = White.copy(alpha = 0.3f))
+                Text(selectChannelHint, color = White.copy(alpha = 0.3f))
             }
         }
 
@@ -231,19 +261,19 @@ private fun PreviewSection(selectedChannel: Channel?) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
-                StatItem("Resolution", selectedChannel.resolution)
-                StatItem("Codec", selectedChannel.codec)
-                StatItem("Bitrate", selectedChannel.bitrate)
-                StatItem("FPS", "${selectedChannel.fps}")
+                StatItem(statResolution, selectedChannel.resolution)
+                StatItem(statCodec, selectedChannel.codec)
+                StatItem(statBitrate, selectedChannel.bitrate)
+                StatItem(statFps, "${selectedChannel.fps}")
             }
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            Text("Program Guide", style = MaterialTheme.typography.labelLarge, color = PrimaryGold)
+            Text(programGuideTitle, style = MaterialTheme.typography.labelLarge, color = PrimaryGold)
             Spacer(modifier = Modifier.height(8.dp))
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                EpgItem("00:00 - 01:00", "The Midnight Movie")
-                EpgItem("01:00 - 02:00", "Global News Today")
+                EpgItem(epg1Time, epg1Title)
+                EpgItem(epg2Time, epg2Title)
             }
         }
     }

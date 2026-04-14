@@ -1,5 +1,6 @@
 package com.optic.iptv.ui.auth
 
+import android.app.Application
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -14,22 +15,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.tv.material3.*
+import com.optic.iptv.R
 import com.optic.iptv.ui.theme.*
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = viewModel(),
+    viewModel: LoginViewModel = viewModel(
+        factory = ViewModelProvider.AndroidViewModelFactory.getInstance(
+            LocalContext.current.applicationContext as Application
+        )
+    ),
     onLoginSuccess: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
+    val codePlaceholder = stringResource(R.string.code_placeholder)
 
     if (state.isSuccess) {
         onLoginSuccess()
@@ -59,7 +69,7 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "OPTIC TV PRO",
+                text = stringResource(R.string.login_title),
                 style = MaterialTheme.typography.displayLarge.copy(
                     color = PrimaryGold,
                     fontWeight = FontWeight.Black,
@@ -70,7 +80,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Enter Activation Code",
+                text = stringResource(R.string.login_subtitle),
                 style = MaterialTheme.typography.headlineLarge,
                 color = White.copy(alpha = 0.8f)
             )
@@ -92,7 +102,7 @@ fun LoginScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = state.code.ifBlank { "•••• •••• ••••" },
+                        text = state.code.ifBlank { codePlaceholder },
                         style = TextStyle(
                             fontSize = 36.sp,
                             fontWeight = FontWeight.Bold,
@@ -120,19 +130,26 @@ fun LoginScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        val digits = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "CLR", "0", "OK")
-                        items(digits.size) { index ->
-                            val digit = digits[index]
+                        val clr = stringResource(R.string.keypad_clear)
+                        val ok = stringResource(R.string.keypad_ok)
+                        val keys = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "CLR", "0", "OK")
+                        items(keys.size) { index ->
+                            val key = keys[index]
                             KeypadButton(
-                                text = digit,
+                                text = when (key) {
+                                    "CLR" -> clr
+                                    "OK" -> ok
+                                    else -> key
+                                },
                                 onClick = {
-                                    when (digit) {
+                                    when (key) {
                                         "CLR" -> viewModel.onBackspace()
                                         "OK" -> viewModel.submitCode()
-                                        else -> viewModel.onCodeDigitEntered(digit)
+                                        else -> viewModel.onCodeDigitEntered(key)
                                     }
                                 },
-                                isLoading = state.isLoading && digit == "OK"
+                                isPrimaryAction = key == "OK",
+                                isLoading = state.isLoading && key == "OK"
                             )
                         }
                     }
@@ -147,6 +164,7 @@ fun LoginScreen(
 private fun KeypadButton(
     text: String,
     onClick: () -> Unit,
+    isPrimaryAction: Boolean = false,
     isLoading: Boolean = false
 ) {
     Surface(
@@ -170,14 +188,14 @@ private fun KeypadButton(
             contentAlignment = Alignment.Center
         ) {
             if (isLoading) {
-                Text("...", color = PureBlack)
+                Text(stringResource(R.string.keypad_loading), color = PureBlack)
             } else {
                 Text(
                     text = text,
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = if (text == "OK") PrimaryGold else White
+                        color = if (isPrimaryAction) PrimaryGold else White
                     ),
                     textAlign = TextAlign.Center
                 )
