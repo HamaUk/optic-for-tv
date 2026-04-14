@@ -124,21 +124,21 @@ fun LoginScreen(
 
                     Spacer(modifier = Modifier.height(48.dp))
 
+                    val keypadClearLabel = stringResource(R.string.keypad_clear)
+                    val keypadOkLabel = stringResource(R.string.keypad_ok)
+                    val keys = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "CLR", "0", "OK")
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(3),
                         modifier = Modifier.height(240.dp).width(280.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        val clr = stringResource(R.string.keypad_clear)
-                        val ok = stringResource(R.string.keypad_ok)
-                        val keys = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "CLR", "0", "OK")
                         items(keys.size) { index ->
                             val key = keys[index]
                             KeypadButton(
                                 text = when (key) {
-                                    "CLR" -> clr
-                                    "OK" -> ok
+                                    "CLR" -> keypadClearLabel
+                                    "OK" -> keypadOkLabel
                                     else -> key
                                 },
                                 onClick = {
