@@ -121,7 +121,6 @@ fun DashboardScreen(
                         ChannelDetailBar(
                             channel = state.selectedChannel!!,
                             hint = stringResource(R.string.channel_detail_hint),
-                            programGuideTitle = stringResource(R.string.program_guide),
                             statResolution = stringResource(R.string.stat_resolution),
                             statCodec = stringResource(R.string.stat_codec),
                             statBitrate = stringResource(R.string.stat_bitrate),
