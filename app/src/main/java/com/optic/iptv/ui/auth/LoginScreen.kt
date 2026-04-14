@@ -4,8 +4,6 @@ import android.app.Application
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -55,16 +53,16 @@ fun LoginScreen(
                 .fillMaxSize()
                 .background(
                     Brush.verticalGradient(
-                        colors = listOf(Color(0x3300A3FF), PureBlack)
+                        colors = listOf(Color(0x4000A3FF), Color(0x180E1217), PureBlack)
                     )
                 )
-                .blur(80.dp)
+                .blur(72.dp)
         )
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(48.dp),
+                .padding(horizontal = 40.dp, vertical = 40.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -77,37 +75,38 @@ fun LoginScreen(
                 )
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Text(
                 text = stringResource(R.string.login_subtitle),
                 style = MaterialTheme.typography.headlineLarge,
-                color = White.copy(alpha = 0.8f)
+                color = White.copy(alpha = 0.85f)
             )
 
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
             Surface(
                 modifier = Modifier
-                    .width(600.dp)
+                    .fillMaxWidth(0.9f)
+                    .widthIn(max = 720.dp)
                     .wrapContentHeight(),
-                shape = RoundedCornerShape(24.dp),
+                shape = RoundedCornerShape(28.dp),
                 colors = SurfaceDefaults.colors(
-                    containerColor = GlassBackground
+                    containerColor = GlassBackground.copy(alpha = 0.85f)
                 ),
-                border = Border(BorderStroke(1.dp, Color.White.copy(alpha = 0.1f)))
+                border = Border(BorderStroke(1.dp, Color.White.copy(alpha = 0.14f)))
             ) {
                 Column(
-                    modifier = Modifier.padding(32.dp),
+                    modifier = Modifier.padding(horizontal = 28.dp, vertical = 28.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         text = state.code.ifBlank { codePlaceholder },
                         style = TextStyle(
-                            fontSize = 36.sp,
+                            fontSize = 34.sp,
                             fontWeight = FontWeight.Bold,
-                            letterSpacing = 8.sp,
-                            color = if (state.code.isBlank()) White.copy(alpha = 0.2f) else White
+                            letterSpacing = 6.sp,
+                            color = if (state.code.isBlank()) White.copy(alpha = 0.22f) else White
                         ),
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
@@ -116,41 +115,53 @@ fun LoginScreen(
                     if (state.error != null) {
                         Text(
                             text = state.error!!,
-                            color = Color.Red,
+                            color = Color(0xFFFF6B6B),
                             style = MaterialTheme.typography.labelLarge,
-                            modifier = Modifier.padding(top = 8.dp)
+                            modifier = Modifier.padding(top = 10.dp)
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(48.dp))
+                    Spacer(modifier = Modifier.height(28.dp))
 
                     val keypadClearLabel = stringResource(R.string.keypad_clear)
                     val keypadOkLabel = stringResource(R.string.keypad_ok)
-                    val keys = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "CLR", "0", "OK")
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(3),
-                        modifier = Modifier.height(240.dp).width(280.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    val rows = listOf(
+                        listOf("1", "2", "3"),
+                        listOf("4", "5", "6"),
+                        listOf("7", "8", "9"),
+                        listOf("CLR", "0", "OK")
+                    )
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        items(keys.size) { index ->
-                            val key = keys[index]
-                            KeypadButton(
-                                text = when (key) {
-                                    "CLR" -> keypadClearLabel
-                                    "OK" -> keypadOkLabel
-                                    else -> key
-                                },
-                                onClick = {
-                                    when (key) {
-                                        "CLR" -> viewModel.onBackspace()
-                                        "OK" -> viewModel.submitCode()
-                                        else -> viewModel.onCodeDigitEntered(key)
-                                    }
-                                },
-                                isPrimaryAction = key == "OK",
-                                isLoading = state.isLoading && key == "OK"
-                            )
+                        rows.forEach { rowKeys ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                rowKeys.forEach { key ->
+                                    KeypadButton(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .height(52.dp),
+                                        text = when (key) {
+                                            "CLR" -> keypadClearLabel
+                                            "OK" -> keypadOkLabel
+                                            else -> key
+                                        },
+                                        onClick = {
+                                            when (key) {
+                                                "CLR" -> viewModel.onBackspace()
+                                                "OK" -> viewModel.submitCode()
+                                                else -> viewModel.onCodeDigitEntered(key)
+                                            }
+                                        },
+                                        isPrimaryAction = key == "OK",
+                                        isLoading = state.isLoading && key == "OK"
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -162,6 +173,7 @@ fun LoginScreen(
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 private fun KeypadButton(
+    modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit,
     isPrimaryAction: Boolean = false,
@@ -169,18 +181,18 @@ private fun KeypadButton(
 ) {
     Surface(
         onClick = onClick,
-        modifier = Modifier.aspectRatio(1.5f),
-        shape = ClickableSurfaceDefaults.shape(RoundedCornerShape(12.dp)),
+        modifier = modifier,
+        shape = ClickableSurfaceDefaults.shape(RoundedCornerShape(14.dp)),
         colors = ClickableSurfaceDefaults.colors(
-            containerColor = Color.White.copy(alpha = 0.05f),
+            containerColor = Color.White.copy(alpha = 0.07f),
             focusedContainerColor = PrimaryGold,
-            pressedContainerColor = PrimaryGold.copy(alpha = 0.8f),
+            pressedContainerColor = PrimaryGold.copy(alpha = 0.82f),
             contentColor = White,
             focusedContentColor = PureBlack
         ),
-        scale = ClickableSurfaceDefaults.scale(focusedScale = 1.15f),
+        scale = ClickableSurfaceDefaults.scale(focusedScale = 1.05f),
         border = ClickableSurfaceDefaults.border(
-            focusedBorder = Border(BorderStroke(2.dp, White))
+            focusedBorder = Border(BorderStroke(2.dp, Color.White.copy(alpha = 0.9f)))
         )
     ) {
         Box(
@@ -193,7 +205,7 @@ private fun KeypadButton(
                 Text(
                     text = text,
                     style = TextStyle(
-                        fontSize = 18.sp,
+                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = if (isPrimaryAction) PrimaryGold else White
                     ),

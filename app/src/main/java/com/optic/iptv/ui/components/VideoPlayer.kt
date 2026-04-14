@@ -31,7 +31,9 @@ import com.optic.iptv.R
 @Composable
 fun VideoPlayer(
     url: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    useController: Boolean = false,
+    controllerShowTimeoutMs: Int = 5_000
 ) {
     val context = LocalContext.current
     val appContext = context.applicationContext
@@ -90,7 +92,6 @@ fun VideoPlayer(
             exoPlayer.prepare()
             exoPlayer.playWhenReady = true
         } catch (_: IllegalStateException) {
-            // Player was released (e.g. view torn down); ignore.
         } catch (e: Exception) {
             errorMessage = context.getString(
                 R.string.playback_error,
@@ -104,12 +105,20 @@ fun VideoPlayer(
             factory = {
                 PlayerView(it).apply {
                     player = exoPlayer
-                    useController = false
+                    useController = useController
+                    setControllerShowTimeoutMs(controllerShowTimeoutMs)
+                    setControllerHideOnTouch(false)
+                    setShowBuffering(PlayerView.SHOW_BUFFERING_WHEN_PLAYING)
                     layoutParams = FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT
                     )
                 }
+            },
+            update = { view ->
+                view.useController = useController
+                view.setControllerShowTimeoutMs(controllerShowTimeoutMs)
+                if (view.player !== exoPlayer) view.player = exoPlayer
             },
             onRelease = { view ->
                 view.player = null

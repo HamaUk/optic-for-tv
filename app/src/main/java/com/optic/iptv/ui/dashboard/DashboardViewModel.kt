@@ -31,7 +31,7 @@ class DashboardViewModel : ViewModel() {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
                 val db = FirebaseDatabase.getInstance()
-                
+
                 val categorySnap = db.getReference("sync/global/channelGroups").get().await()
                 val baseCategories = categorySnap.children.mapNotNull { snap ->
                     val name = snap.child("name").getValue(String::class.java) ?: return@mapNotNull null
@@ -42,12 +42,14 @@ class DashboardViewModel : ViewModel() {
                 val channels = channelSnap.children.mapNotNull { snap ->
                     val name = snap.child("name").getValue(String::class.java) ?: "Unknown"
                     val url = snap.child("url").getValue(String::class.java) ?: ""
-                    val group = snap.child("group").getValue(String::class.java) ?: snap.child("category").getValue(String::class.java) ?: "General"
-                    val logo = snap.child("logo").getValue(String::class.java) ?: snap.child("icon_url").getValue(String::class.java) ?: ""
-                    
+                    val group = snap.child("group").getValue(String::class.java)
+                        ?: snap.child("category").getValue(String::class.java) ?: "General"
+                    val logo = snap.child("logo").getValue(String::class.java)
+                        ?: snap.child("icon_url").getValue(String::class.java) ?: ""
+
                     val matchingCategory = baseCategories.find { it.name.equals(group, ignoreCase = true) }
                     val categoryId = matchingCategory?.id ?: group
-                    
+
                     Channel(
                         id = snap.key ?: "",
                         name = name,
@@ -73,7 +75,7 @@ class DashboardViewModel : ViewModel() {
                     selectedCategory = finalCategories.firstOrNull(),
                     isLoading = false
                 )
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 _uiState.value = _uiState.value.copy(isLoading = false)
             }
         }
@@ -86,4 +88,6 @@ class DashboardViewModel : ViewModel() {
     fun selectChannel(channel: Channel) {
         _uiState.value = _uiState.value.copy(selectedChannel = channel)
     }
+
+    fun channelById(id: String): Channel? = _uiState.value.channels.find { it.id == id }
 }
