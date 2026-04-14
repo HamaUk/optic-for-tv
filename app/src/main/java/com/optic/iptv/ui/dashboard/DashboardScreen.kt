@@ -125,11 +125,7 @@ fun DashboardScreen(
                             statResolution = stringResource(R.string.stat_resolution),
                             statCodec = stringResource(R.string.stat_codec),
                             statBitrate = stringResource(R.string.stat_bitrate),
-                            statFps = stringResource(R.string.stat_fps),
-                            epg1Time = stringResource(R.string.epg_item_1_time),
-                            epg1Title = stringResource(R.string.epg_item_1_title),
-                            epg2Time = stringResource(R.string.epg_item_2_time),
-                            epg2Title = stringResource(R.string.epg_item_2_title)
+                            statFps = stringResource(R.string.stat_fps)
                         )
                     }
                 }
@@ -293,15 +289,10 @@ private fun ChannelCard(
 private fun ChannelDetailBar(
     channel: Channel,
     hint: String,
-    programGuideTitle: String,
     statResolution: String,
     statCodec: String,
     statBitrate: String,
-    statFps: String,
-    epg1Time: String,
-    epg1Title: String,
-    epg2Time: String,
-    epg2Title: String
+    statFps: String
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -327,13 +318,6 @@ private fun ChannelDetailBar(
                 StatItem(statCodec, channel.codec)
                 StatItem(statBitrate, channel.bitrate)
                 StatItem(statFps, "${channel.fps}")
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(programGuideTitle, style = MaterialTheme.typography.labelLarge, color = PrimaryGold)
-            Spacer(modifier = Modifier.height(8.dp))
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                EpgItem(epg1Time, epg1Title)
-                EpgItem(epg2Time, epg2Title)
             }
         }
     }

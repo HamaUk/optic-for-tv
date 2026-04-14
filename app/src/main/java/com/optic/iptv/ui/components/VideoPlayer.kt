@@ -80,23 +80,20 @@ fun VideoPlayer(
 
     LaunchedEffect(url) {
         errorMessage = null
-        if (!isPlayableUrl(url)) {
-            exoPlayer.stop()
-            exoPlayer.clearMediaItems()
-            errorMessage = invalidUrlMessage
-            return@LaunchedEffect
-        }
-        try {
-            exoPlayer.stop()
-            exoPlayer.setMediaItem(MediaItem.fromUri(url.trim()))
-            exoPlayer.prepare()
-            exoPlayer.playWhenReady = true
-        } catch (_: IllegalStateException) {
-        } catch (e: Exception) {
-            errorMessage = context.getString(
-                R.string.playback_error,
-                e.message.orEmpty()
-            )
+        exoPlayer.stop()
+        if (url.isNotBlank()) {
+            try {
+                exoPlayer.setMediaItem(MediaItem.fromUri(url))
+                exoPlayer.prepare()
+                exoPlayer.playWhenReady = true
+            } catch (e: Exception) {
+                errorMessage = context.getString(
+                    R.string.playback_error,
+                    e.localizedMessage ?: e.message.orEmpty()
+                )
+            }
+        } else {
+            errorMessage = context.getString(R.string.playback_invalid_url)
         }
     }
 

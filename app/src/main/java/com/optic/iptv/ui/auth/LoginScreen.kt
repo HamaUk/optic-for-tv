@@ -62,7 +62,7 @@ fun LoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 40.dp, vertical = 40.dp),
+                .padding(horizontal = 40.dp, vertical = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -83,7 +83,7 @@ fun LoginScreen(
                 color = White.copy(alpha = 0.85f)
             )
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             Surface(
                 modifier = Modifier
@@ -97,7 +97,7 @@ fun LoginScreen(
                 border = Border(BorderStroke(1.dp, Color.White.copy(alpha = 0.14f)))
             ) {
                 Column(
-                    modifier = Modifier.padding(horizontal = 28.dp, vertical = 28.dp),
+                    modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -121,7 +121,7 @@ fun LoginScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(28.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     val keypadClearLabel = stringResource(R.string.keypad_clear)
                     val keypadOkLabel = stringResource(R.string.keypad_ok)
