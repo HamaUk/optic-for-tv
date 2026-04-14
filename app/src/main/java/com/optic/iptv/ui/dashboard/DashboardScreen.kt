@@ -1,5 +1,6 @@
 package com.optic.iptv.ui.dashboard
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -88,7 +89,7 @@ private fun CategorySidebar(
 ) {
     Surface(
         modifier = Modifier.width(260.dp).fillMaxHeight(),
-        colors = ClickableSurfaceDefaults.colors(containerColor = GlassBackground)
+        colors = SurfaceDefaults.colors(containerColor = GlassBackground)
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
@@ -114,8 +115,7 @@ private fun CategorySidebar(
                         colors = ClickableSurfaceDefaults.colors(
                             containerColor = if (isSelected) Color.White.copy(alpha = 0.12f) else Color.Transparent,
                             focusedContainerColor = White.copy(alpha = 0.25f),
-                            pressedContainerColor = White.copy(alpha = 0.3f),
-                            selectedContainerColor = Color.White.copy(alpha = 0.15f)
+                            pressedContainerColor = White.copy(alpha = 0.3f)
                         ),
                         scale = ClickableSurfaceDefaults.scale(focusedScale = 1.05f),
                         border = ClickableSurfaceDefaults.border(
@@ -165,8 +165,7 @@ private fun ChannelCard(
         ),
         scale = ClickableSurfaceDefaults.scale(focusedScale = 1.08f),
         border = ClickableSurfaceDefaults.border(
-            focusedBorder = Border(BorderStroke(3.dp, PrimaryGold)),
-            selectedBorder = Border(BorderStroke(1.dp, PrimaryGold.copy(alpha = 0.3f)))
+            focusedBorder = Border(BorderStroke(3.dp, PrimaryGold))
         )
     ) {
         Row(

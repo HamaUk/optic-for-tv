@@ -1,5 +1,6 @@
 package com.optic.iptv.ui.auth
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -80,12 +81,11 @@ fun LoginScreen(
                 modifier = Modifier
                     .width(600.dp)
                     .wrapContentHeight(),
-                shape = ClickableSurfaceDefaults.shape(RoundedCornerShape(24.dp)),
-                colors = ClickableSurfaceDefaults.colors(
-                    containerColor = GlassBackground,
-                    focusedContainerColor = GlassBackground
+                shape = SurfaceDefaults.shape(RoundedCornerShape(24.dp)),
+                colors = SurfaceDefaults.colors(
+                    containerColor = GlassBackground
                 ),
-                border = ClickableSurfaceDefaults.border(
+                border = SurfaceDefaults.border(
                     border = Border(BorderStroke(1.dp, Color.White.copy(alpha = 0.1f)))
                 )
             ) {
