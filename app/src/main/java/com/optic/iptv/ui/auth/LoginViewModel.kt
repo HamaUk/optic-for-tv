@@ -48,27 +48,29 @@ class LoginViewModel : ViewModel() {
                 val dbRef = FirebaseDatabase.getInstance().getReference("sync/global/loginCodes")
                 val snapshot = dbRef.get().await()
                 
+                val normalizedInput = code.trim().lowercase()
                 var found = false
                 val now = Instant.now()
 
                 snapshot.children.forEach { child ->
                     val item = child.value as? Map<*, *>
-                    val active = item?.get("active") as? Boolean ?: true
+                    val active = item?.get("active") != false // Default to active if field missing
+                    val dbCode = item?.get("code")?.toString()?.trim()?.lowercase() ?: ""
                     val expiresAt = item?.get("expiresAt")?.toString()
-                    val itemCode = child.key ?: ""
 
-                    if (itemCode == code && active) {
-                        if (expiresAt != null) {
+                    if (active && dbCode == normalizedInput) {
+                        if (expiresAt == null || expiresAt.equals("permanent", ignoreCase = true)) {
+                            found = true
+                        } else {
                             try {
                                 val expiry = Instant.parse(expiresAt)
                                 if (now.isBefore(expiry)) {
                                     found = true
                                 }
                             } catch (e: Exception) {
+                                // Treat malformed dates as non-expired if active
                                 found = true
                             }
-                        } else {
-                            found = true
                         }
                     }
                 }
