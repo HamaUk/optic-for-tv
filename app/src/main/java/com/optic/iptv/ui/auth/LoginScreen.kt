@@ -94,7 +94,7 @@ fun LoginScreen(
                     Text(
                         text = state.code.ifBlank { "•••• •••• ••••" },
                         style = TextStyle(
-                            fontSize = 48.sp,
+                            fontSize = 36.sp,
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 8.sp,
                             color = if (state.code.isBlank()) White.copy(alpha = 0.2f) else White
@@ -116,9 +116,9 @@ fun LoginScreen(
 
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(3),
-                        modifier = Modifier.height(320.dp).width(360.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        modifier = Modifier.height(240.dp).width(280.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         val digits = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "CLR", "0", "OK")
                         items(digits.size) { index ->
@@ -175,7 +175,7 @@ private fun KeypadButton(
                 Text(
                     text = text,
                     style = TextStyle(
-                        fontSize = 20.sp,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = if (text == "OK") PrimaryGold else White
                     ),
