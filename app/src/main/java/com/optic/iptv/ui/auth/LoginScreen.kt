@@ -81,13 +81,11 @@ fun LoginScreen(
                 modifier = Modifier
                     .width(600.dp)
                     .wrapContentHeight(),
-                shape = SurfaceDefaults.shape(RoundedCornerShape(24.dp)),
+                shape = RoundedCornerShape(24.dp),
                 colors = SurfaceDefaults.colors(
                     containerColor = GlassBackground
                 ),
-                border = SurfaceDefaults.border(
-                    border = Border(BorderStroke(1.dp, Color.White.copy(alpha = 0.1f)))
-                )
+                border = Border(BorderStroke(1.dp, Color.White.copy(alpha = 0.1f)))
             ) {
                 Column(
                     modifier = Modifier.padding(32.dp),
