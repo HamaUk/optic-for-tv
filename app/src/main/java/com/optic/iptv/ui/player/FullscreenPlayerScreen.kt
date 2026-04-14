@@ -43,7 +43,7 @@ fun FullscreenPlayerScreen(
             VideoPlayer(
                 url = channel.url,
                 modifier = Modifier.fillMaxSize(),
-                useController = true,
+                showController = true,
                 controllerShowTimeoutMs = 8_000
             )
 

@@ -32,7 +32,7 @@ import com.optic.iptv.R
 fun VideoPlayer(
     url: String,
     modifier: Modifier = Modifier,
-    useController: Boolean = false,
+    showController: Boolean = false,
     controllerShowTimeoutMs: Int = 5_000
 ) {
     val context = LocalContext.current
@@ -105,7 +105,7 @@ fun VideoPlayer(
             factory = {
                 PlayerView(it).apply {
                     player = exoPlayer
-                    useController = useController
+                    useController = showController
                     setControllerShowTimeoutMs(controllerShowTimeoutMs)
                     setControllerHideOnTouch(false)
                     setShowBuffering(PlayerView.SHOW_BUFFERING_WHEN_PLAYING)
@@ -116,7 +116,7 @@ fun VideoPlayer(
                 }
             },
             update = { view ->
-                view.useController = useController
+                view.useController = showController
                 view.setControllerShowTimeoutMs(controllerShowTimeoutMs)
                 if (view.player !== exoPlayer) view.player = exoPlayer
             },

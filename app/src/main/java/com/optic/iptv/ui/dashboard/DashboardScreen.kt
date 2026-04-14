@@ -172,7 +172,7 @@ private fun CategorySidebar(
         modifier = Modifier
             .width(272.dp)
             .fillMaxHeight(),
-        shape = SurfaceDefaults.shape(RoundedCornerShape(0.dp)),
+        shape = RoundedCornerShape(0.dp),
         colors = SurfaceDefaults.colors(containerColor = Color(0xCC0F1419))
     ) {
         Column(modifier = Modifier.padding(22.dp)) {
@@ -305,7 +305,7 @@ private fun ChannelDetailBar(
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = SurfaceDefaults.shape(RoundedCornerShape(20.dp)),
+        shape = RoundedCornerShape(20.dp),
         colors = SurfaceDefaults.colors(containerColor = Color(0xAA0F1419)),
         border = Border(BorderStroke(1.dp, Color.White.copy(alpha = 0.1f)))
     ) {
