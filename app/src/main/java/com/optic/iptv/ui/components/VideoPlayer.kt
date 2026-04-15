@@ -22,6 +22,8 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.DefaultLoadControl
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.ui.PlayerView
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.Text
@@ -41,7 +43,16 @@ fun VideoPlayer(
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
     val exoPlayer = remember(appContext) {
+        val loadControl = DefaultLoadControl.Builder()
+            .setBufferDurationsMs(32000, 64000, 1000, 2000)
+            .build()
+        val trackSelector = DefaultTrackSelector(appContext).apply {
+            setParameters(buildUponParameters().clearVideoSizeConstraints())
+        }
+
         ExoPlayer.Builder(appContext)
+            .setLoadControl(loadControl)
+            .setTrackSelector(trackSelector)
             .build()
             .apply {
                 addListener(object : Player.Listener {

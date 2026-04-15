@@ -59,7 +59,6 @@ fun LoginScreen(
                         colors = listOf(Color(0x4000A3FF), Color(0x180E1217), PureBlack)
                     )
                 )
-                .blur(72.dp)
         )
 
         Column(

@@ -5,9 +5,17 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import kotlinx.coroutines.delay
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -31,6 +39,12 @@ fun FullscreenPlayerScreen(
 ) {
     val state by dashboardViewModel.uiState.collectAsState()
     val channel = state.channels.find { it.id == channelId }
+    var showOverlay by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        delay(4000)
+        showOverlay = false
+    }
 
     BackHandler(onBack = onBack)
 
@@ -47,17 +61,22 @@ fun FullscreenPlayerScreen(
                 controllerShowTimeoutMs = 4_000
             )
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.TopCenter)
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(Color(0xE6000000), Color.Transparent)
-                        )
-                    )
-                    .padding(horizontal = 24.dp, vertical = 20.dp)
+            AnimatedVisibility(
+                visible = showOverlay,
+                enter = fadeIn(),
+                exit = fadeOut(),
+                modifier = Modifier.align(Alignment.TopCenter)
             ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            Brush.verticalGradient(
+                                colors = listOf(Color(0xE6000000), Color.Transparent)
+                            )
+                        )
+                        .padding(horizontal = 24.dp, vertical = 20.dp)
+                ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -112,6 +131,7 @@ fun FullscreenPlayerScreen(
                             modifier = Modifier.weight(1f)
                         )
                     }
+                }
                 }
             }
         } else {

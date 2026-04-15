@@ -11,10 +11,14 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -27,6 +31,8 @@ import com.optic.iptv.R
 import com.optic.iptv.data.model.Category
 import com.optic.iptv.data.model.Channel
 import com.optic.iptv.ui.theme.*
+import coil.compose.AsyncImage
+import androidx.compose.foundation.lazy.itemsIndexed
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
@@ -41,11 +47,7 @@ fun DashboardScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    Brush.radialGradient(
-                        colors = listOf(Color(0xFF1E2A3A), Color(0xFF0D1118), DeepCharcoal)
-                    )
-                )
+                .background(DashboardBackgroundBrush)
         )
 
         Row(modifier = Modifier.fillMaxSize()) {
@@ -142,12 +144,7 @@ fun DashboardScreen(
                         }
                     }
 
-                    if (state.selectedChannel != null) {
-                        ChannelDetailBar(
-                            channel = state.selectedChannel!!,
-                            hint = stringResource(R.string.channel_detail_hint)
-                        )
-                    }
+
                 }
 
                 if (state.isLoading) {
@@ -185,6 +182,14 @@ private fun CategorySidebar(
     onCategorySelected: (Category) -> Unit
 ) {
     val sidebarShape = RoundedCornerShape(topEnd = 32.dp, bottomEnd = 32.dp)
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(categories) {
+        if (categories.isNotEmpty()) {
+            try { focusRequester.requestFocus() } catch (_: Exception) {}
+        }
+    }
+
     Box(
         modifier = Modifier
             .width(300.dp)
@@ -195,20 +200,12 @@ private fun CategorySidebar(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
-                    brush = Brush.horizontalGradient(
-                        colors = listOf(Color(0xF00F1419), Color(0xE6161F2E))
-                    ),
+                    brush = SidebarBackgroundBrush,
                     shape = sidebarShape
                 )
                 .border(
                     width = 1.dp,
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            PrimaryGold.copy(alpha = 0.35f),
-                            Color(0x2200A3FF),
-                            PrimaryGold.copy(alpha = 0.2f)
-                        )
-                    ),
+                    brush = SidebarBorderBrush,
                     shape = sidebarShape
                 )
         )
@@ -231,13 +228,14 @@ private fun CategorySidebar(
             Spacer(modifier = Modifier.height(22.dp))
 
             LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                items(categories) { category ->
+                itemsIndexed(categories) { index, category ->
                     val isSelected = category.id == selectedCategory?.id
                     Surface(
                         onClick = { onCategorySelected(category) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(58.dp),
+                            .height(58.dp)
+                            .let { if (index == 0) it.focusRequester(focusRequester) else it },
                         shape = ClickableSurfaceDefaults.shape(RoundedCornerShape(16.dp)),
                         colors = ClickableSurfaceDefaults.colors(
                             containerColor = if (isSelected) Color(0x331E2F4A) else Color.Transparent,
@@ -315,16 +313,19 @@ private fun ChannelCard(
             Box(
                 modifier = Modifier
                     .size(60.dp)
-                    .background(
-                        Brush.radialGradient(
-                            colors = listOf(Color(0xFF2A3444), PureBlack)
-                        ),
-                        RoundedCornerShape(14.dp)
-                    )
+                    .background(ChannelCardIconBrush, RoundedCornerShape(14.dp))
                     .border(1.dp, PrimaryGold.copy(alpha = 0.25f), RoundedCornerShape(14.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = tvBadge, color = PrimaryGold.copy(alpha = 0.75f))
+                if (channel.logo.isNotBlank()) {
+                    AsyncImage(
+                        model = channel.logo,
+                        contentDescription = channel.name,
+                        modifier = Modifier.size(44.dp)
+                    )
+                } else {
+                    Text(text = tvBadge, color = PrimaryGold.copy(alpha = 0.75f))
+                }
             }
 
             Spacer(modifier = Modifier.width(14.dp))
@@ -340,46 +341,4 @@ private fun ChannelCard(
     }
 }
 
-@OptIn(ExperimentalTvMaterial3Api::class)
-@Composable
-private fun ChannelDetailBar(
-    channel: Channel,
-    hint: String
-) {
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(22.dp),
-        colors = SurfaceDefaults.colors(containerColor = Color(0xB3141820)),
-        border = Border(BorderStroke(1.dp, Color.White.copy(alpha = 0.12f)))
-    ) {
-        Column(modifier = Modifier.padding(20.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Box(
-                    modifier = Modifier
-                        .background(PrimaryGold.copy(alpha = 0.25f), RoundedCornerShape(6.dp))
-                        .padding(horizontal = 10.dp, vertical = 4.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.player_live),
-                        style = MaterialTheme.typography.labelLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
-                        ),
-                        color = PrimaryGold
-                    )
-                }
-                Text(
-                    text = channel.name,
-                    style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
-                    color = White
-                )
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = hint,
-                style = MaterialTheme.typography.labelLarge,
-                color = White.copy(alpha = 0.48f)
-            )
-        }
-    }
 }
