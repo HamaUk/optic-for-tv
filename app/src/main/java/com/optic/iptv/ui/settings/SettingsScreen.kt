@@ -116,19 +116,25 @@ fun SettingsScreen(
                         title = stringResource(R.string.settings_low_latency),
                         subtitle = stringResource(R.string.settings_low_latency_desc),
                         checked = state.lowLatencyMode,
-                        onCheckedChange = { viewModel.setLowLatency(it) }
+                        onCheckedChange = { viewModel.setLowLatency(it) },
+                        onLabel = stringResource(R.string.settings_toggle_on),
+                        offLabel = stringResource(R.string.settings_toggle_off)
                     )
                     SettingsToggleRow(
                         title = stringResource(R.string.settings_hw_decode),
                         subtitle = stringResource(R.string.settings_hw_decode_desc),
                         checked = state.hardwareDecoder,
-                        onCheckedChange = { viewModel.setHardwareDecoder(it) }
+                        onCheckedChange = { viewModel.setHardwareDecoder(it) },
+                        onLabel = stringResource(R.string.settings_toggle_on),
+                        offLabel = stringResource(R.string.settings_toggle_off)
                     )
                     SettingsToggleRow(
                         title = stringResource(R.string.settings_highest_quality),
                         subtitle = stringResource(R.string.settings_highest_quality_desc),
                         checked = state.preferHighestQuality,
-                        onCheckedChange = { viewModel.setPreferHighestQuality(it) }
+                        onCheckedChange = { viewModel.setPreferHighestQuality(it) },
+                        onLabel = stringResource(R.string.settings_toggle_on),
+                        offLabel = stringResource(R.string.settings_toggle_off)
                     )
                 }
 
@@ -137,13 +143,17 @@ fun SettingsScreen(
                         title = stringResource(R.string.settings_analytics),
                         subtitle = stringResource(R.string.settings_analytics_desc),
                         checked = state.analyticsEnabled,
-                        onCheckedChange = { viewModel.setAnalytics(it) }
+                        onCheckedChange = { viewModel.setAnalytics(it) },
+                        onLabel = stringResource(R.string.settings_toggle_on),
+                        offLabel = stringResource(R.string.settings_toggle_off)
                     )
                     SettingsToggleRow(
                         title = stringResource(R.string.settings_parental),
                         subtitle = stringResource(R.string.settings_parental_desc),
                         checked = state.parentalControls,
-                        onCheckedChange = { viewModel.setParental(it) }
+                        onCheckedChange = { viewModel.setParental(it) },
+                        onLabel = stringResource(R.string.settings_toggle_on),
+                        offLabel = stringResource(R.string.settings_toggle_off)
                     )
                 }
 
@@ -272,7 +282,9 @@ private fun SettingsToggleRow(
     title: String,
     subtitle: String,
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit,
+    onLabel: String,
+    offLabel: String
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -309,7 +321,7 @@ private fun SettingsToggleRow(
         ) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
-                    text = if (checked) "ON" else "OFF",
+                    text = if (checked) onLabel else offLabel,
                     style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
                 )
             }
