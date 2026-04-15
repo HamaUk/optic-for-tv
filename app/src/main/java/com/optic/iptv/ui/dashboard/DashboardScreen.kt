@@ -338,4 +338,5 @@ private fun ChannelCard(
                 modifier = Modifier.weight(1f)
             )
         }
+    }
 }
