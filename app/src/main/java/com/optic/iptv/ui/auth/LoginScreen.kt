@@ -4,7 +4,9 @@ import android.app.Application
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,6 +40,7 @@ fun LoginScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val codePlaceholder = stringResource(R.string.code_placeholder)
+    val scroll = rememberScrollState()
 
     if (state.isSuccess) {
         onLoginSuccess()
@@ -62,50 +65,57 @@ fun LoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 40.dp, vertical = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .verticalScroll(scroll)
+                .padding(horizontal = 24.dp, vertical = 12.dp)
+                .padding(bottom = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(16.dp))
+
             Text(
                 text = stringResource(R.string.login_title),
                 style = MaterialTheme.typography.displayLarge.copy(
                     color = PrimaryGold,
                     fontWeight = FontWeight.Black,
-                    letterSpacing = 4.sp
+                    letterSpacing = 3.sp,
+                    fontSize = 44.sp,
+                    lineHeight = 50.sp
                 )
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = stringResource(R.string.login_subtitle),
-                style = MaterialTheme.typography.headlineLarge,
-                color = White.copy(alpha = 0.85f)
+                style = MaterialTheme.typography.headlineLarge.copy(fontSize = 24.sp, lineHeight = 30.sp),
+                color = White.copy(alpha = 0.85f),
+                textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             Surface(
                 modifier = Modifier
-                    .fillMaxWidth(0.9f)
-                    .widthIn(max = 720.dp)
+                    .fillMaxWidth()
+                    .widthIn(max = 680.dp)
                     .wrapContentHeight(),
                 shape = RoundedCornerShape(28.dp),
                 colors = SurfaceDefaults.colors(
-                    containerColor = GlassBackground.copy(alpha = 0.85f)
+                    containerColor = GlassBackground.copy(alpha = 0.88f)
                 ),
                 border = Border(BorderStroke(1.dp, Color.White.copy(alpha = 0.14f)))
             ) {
                 Column(
-                    modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 18.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         text = state.code.ifBlank { codePlaceholder },
                         style = TextStyle(
-                            fontSize = 34.sp,
+                            fontSize = 28.sp,
                             fontWeight = FontWeight.Bold,
-                            letterSpacing = 6.sp,
+                            letterSpacing = 5.sp,
+                            lineHeight = 34.sp,
                             color = if (state.code.isBlank()) White.copy(alpha = 0.22f) else White
                         ),
                         textAlign = TextAlign.Center,
@@ -117,11 +127,12 @@ fun LoginScreen(
                             text = state.error!!,
                             color = Color(0xFFFF6B6B),
                             style = MaterialTheme.typography.labelLarge,
-                            modifier = Modifier.padding(top = 10.dp)
+                            modifier = Modifier.padding(top = 8.dp),
+                            textAlign = TextAlign.Center
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(14.dp))
 
                     val keypadClearLabel = stringResource(R.string.keypad_clear)
                     val keypadOkLabel = stringResource(R.string.keypad_ok)
@@ -133,18 +144,18 @@ fun LoginScreen(
                     )
                     Column(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         rows.forEach { rowKeys ->
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 rowKeys.forEach { key ->
                                     KeypadButton(
                                         modifier = Modifier
                                             .weight(1f)
-                                            .height(52.dp),
+                                            .height(46.dp),
                                         text = when (key) {
                                             "CLR" -> keypadClearLabel
                                             "OK" -> keypadOkLabel
@@ -166,6 +177,8 @@ fun LoginScreen(
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
@@ -182,9 +195,9 @@ private fun KeypadButton(
     Surface(
         onClick = onClick,
         modifier = modifier,
-        shape = ClickableSurfaceDefaults.shape(RoundedCornerShape(14.dp)),
+        shape = ClickableSurfaceDefaults.shape(RoundedCornerShape(12.dp)),
         colors = ClickableSurfaceDefaults.colors(
-            containerColor = Color.White.copy(alpha = 0.07f),
+            containerColor = Color.White.copy(alpha = 0.08f),
             focusedContainerColor = PrimaryGold,
             pressedContainerColor = PrimaryGold.copy(alpha = 0.82f),
             contentColor = White,
@@ -205,11 +218,12 @@ private fun KeypadButton(
                 Text(
                     text = text,
                     style = TextStyle(
-                        fontSize = 20.sp,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = if (isPrimaryAction) PrimaryGold else White
                     ),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    maxLines = 1
                 )
             }
         }

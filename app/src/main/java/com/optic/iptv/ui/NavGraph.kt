@@ -12,11 +12,17 @@ import androidx.navigation.navArgument
 import com.optic.iptv.ui.auth.LoginScreen
 import com.optic.iptv.ui.dashboard.DashboardScreen
 import com.optic.iptv.ui.dashboard.DashboardViewModel
+import com.optic.iptv.ui.home.HomeHubScreen
+import com.optic.iptv.ui.movies.MoviesScreen
 import com.optic.iptv.ui.player.FullscreenPlayerScreen
+import com.optic.iptv.ui.settings.SettingsScreen
 
 sealed class Screen(val route: String) {
     data object Login : Screen("login")
-    data object Dashboard : Screen("dashboard")
+    data object Home : Screen("home")
+    data object LiveTv : Screen("live_tv")
+    data object Movies : Screen("movies")
+    data object Settings : Screen("settings")
     data object Player : Screen("player/{channelId}") {
         fun createRoute(channelId: String) = "player/${Uri.encode(channelId)}"
     }
@@ -31,20 +37,34 @@ fun NavGraph(navController: NavHostController) {
         composable(Screen.Login.route) {
             LoginScreen(
                 onLoginSuccess = {
-                    navController.navigate(Screen.Dashboard.route) {
+                    navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.Login.route) { inclusive = true }
                     }
                 }
             )
         }
-        composable(Screen.Dashboard.route) {
+        composable(Screen.Home.route) {
+            HomeHubScreen(
+                onLiveTv = { navController.navigate(Screen.LiveTv.route) },
+                onMovies = { navController.navigate(Screen.Movies.route) },
+                onSettings = { navController.navigate(Screen.Settings.route) }
+            )
+        }
+        composable(Screen.LiveTv.route) {
             DashboardScreen(
+                onBackToHub = { navController.popBackStack() },
                 onPlayChannel = { channel ->
                     if (channel.id.isNotBlank()) {
                         navController.navigate(Screen.Player.createRoute(channel.id))
                     }
                 }
             )
+        }
+        composable(Screen.Movies.route) {
+            MoviesScreen(onBack = { navController.popBackStack() })
+        }
+        composable(Screen.Settings.route) {
+            SettingsScreen(onBack = { navController.popBackStack() })
         }
         composable(
             route = Screen.Player.route,
@@ -55,7 +75,7 @@ fun NavGraph(navController: NavHostController) {
             val encoded = backStackEntry.arguments?.getString("channelId").orEmpty()
             val channelId = Uri.decode(encoded)
             val parentEntry = remember {
-                navController.getBackStackEntry(Screen.Dashboard.route)
+                navController.getBackStackEntry(Screen.LiveTv.route)
             }
             val dashboardVm: DashboardViewModel = viewModel(parentEntry)
             FullscreenPlayerScreen(

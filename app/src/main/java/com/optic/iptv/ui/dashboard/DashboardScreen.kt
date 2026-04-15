@@ -31,6 +31,7 @@ import com.optic.iptv.ui.theme.*
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun DashboardScreen(
+    onBackToHub: () -> Unit,
     onPlayChannel: (Channel) -> Unit,
     viewModel: DashboardViewModel = viewModel()
 ) {
@@ -42,7 +43,7 @@ fun DashboardScreen(
                 .fillMaxSize()
                 .background(
                     Brush.radialGradient(
-                        colors = listOf(Color(0xFF1E2836), PureBlack, DeepCharcoal)
+                        colors = listOf(Color(0xFF1E2A3A), Color(0xFF0D1118), DeepCharcoal)
                     )
                 )
         )
@@ -58,35 +59,60 @@ fun DashboardScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 28.dp, vertical = 20.dp)
+                        .padding(start = 8.dp, end = 28.dp, top = 20.dp, bottom = 20.dp)
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Column {
-                            Text(
-                                text = state.selectedCategory?.name
-                                    ?: stringResource(R.string.channels_header),
-                                style = MaterialTheme.typography.headlineLarge.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    letterSpacing = 0.5.sp
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            Surface(
+                                onClick = onBackToHub,
+                                shape = ClickableSurfaceDefaults.shape(RoundedCornerShape(14.dp)),
+                                colors = ClickableSurfaceDefaults.colors(
+                                    containerColor = Color.White.copy(alpha = 0.08f),
+                                    focusedContainerColor = PrimaryGold,
+                                    contentColor = White,
+                                    focusedContentColor = PureBlack
                                 ),
-                                color = White
-                            )
-                            Text(
-                                text = stringResource(
-                                    R.string.channels_count_format,
-                                    state.channels.size
-                                ),
-                                style = MaterialTheme.typography.labelLarge,
-                                color = White.copy(alpha = 0.45f)
-                            )
+                                scale = ClickableSurfaceDefaults.scale(focusedScale = 1.05f),
+                                border = ClickableSurfaceDefaults.border(
+                                    focusedBorder = Border(BorderStroke(2.dp, White.copy(alpha = 0.85f)))
+                                )
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.nav_back_home),
+                                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                                    modifier = Modifier.padding(horizontal = 18.dp, vertical = 10.dp)
+                                )
+                            }
+                            Column {
+                                Text(
+                                    text = state.selectedCategory?.name
+                                        ?: stringResource(R.string.channels_header),
+                                    style = MaterialTheme.typography.headlineLarge.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        letterSpacing = 0.5.sp
+                                    ),
+                                    color = White
+                                )
+                                Text(
+                                    text = stringResource(
+                                        R.string.channels_count_format,
+                                        state.channels.size
+                                    ),
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = White.copy(alpha = 0.45f)
+                                )
+                            }
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(18.dp))
 
                     val filteredChannels = if (state.selectedCategory != null) {
                         state.channels.filter { it.categoryId == state.selectedCategory!!.id }
@@ -95,13 +121,13 @@ fun DashboardScreen(
                     }
 
                     LazyVerticalGrid(
-                        columns = GridCells.Adaptive(minSize = 300.dp),
+                        columns = GridCells.Adaptive(minSize = 280.dp),
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxWidth(),
-                        contentPadding = PaddingValues(bottom = 24.dp),
-                        verticalArrangement = Arrangement.spacedBy(14.dp),
-                        horizontalArrangement = Arrangement.spacedBy(14.dp)
+                        contentPadding = PaddingValues(bottom = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(filteredChannels, key = { it.id }) { channel ->
                             ChannelCard(
@@ -121,10 +147,15 @@ fun DashboardScreen(
                         ChannelDetailBar(
                             channel = state.selectedChannel!!,
                             hint = stringResource(R.string.channel_detail_hint),
+                            programGuideTitle = stringResource(R.string.program_guide),
                             statResolution = stringResource(R.string.stat_resolution),
                             statCodec = stringResource(R.string.stat_codec),
                             statBitrate = stringResource(R.string.stat_bitrate),
-                            statFps = stringResource(R.string.stat_fps)
+                            statFps = stringResource(R.string.stat_fps),
+                            epg1Time = stringResource(R.string.epg_item_1_time),
+                            epg1Title = stringResource(R.string.epg_item_1_title),
+                            epg2Time = stringResource(R.string.epg_item_2_time),
+                            epg2Title = stringResource(R.string.epg_item_2_title)
                         )
                     }
                 }
@@ -144,9 +175,9 @@ fun DashboardScreen(
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
-                                text = "Optic TV Pro",
+                                text = stringResource(R.string.app_name),
                                 style = MaterialTheme.typography.labelLarge,
-                                color = PrimaryGold.copy(alpha = 0.8f)
+                                color = PrimaryGold.copy(alpha = 0.85f)
                             )
                         }
                     }
@@ -163,59 +194,97 @@ private fun CategorySidebar(
     selectedCategory: Category?,
     onCategorySelected: (Category) -> Unit
 ) {
-    Surface(
+    val sidebarShape = RoundedCornerShape(topEnd = 32.dp, bottomEnd = 32.dp)
+    Box(
         modifier = Modifier
-            .width(272.dp)
-            .fillMaxHeight(),
-        shape = RoundedCornerShape(0.dp),
-        colors = SurfaceDefaults.colors(containerColor = Color(0xCC0F1419))
+            .width(300.dp)
+            .fillMaxHeight()
+            .padding(vertical = 16.dp)
     ) {
-        Column(modifier = Modifier.padding(22.dp)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(Color(0xF00F1419), Color(0xE6161F2E))
+                    ),
+                    shape = sidebarShape
+                )
+                .border(
+                    width = 1.dp,
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            PrimaryGold.copy(alpha = 0.35f),
+                            Color(0x2200A3FF),
+                            PrimaryGold.copy(alpha = 0.2f)
+                        )
+                    ),
+                    shape = sidebarShape
+                )
+        )
+        Column(modifier = Modifier.padding(start = 20.dp, end = 18.dp, top = 24.dp, bottom = 24.dp)) {
             Text(
-                text = stringResource(R.string.live_tv),
+                text = stringResource(R.string.sidebar_categories),
                 style = MaterialTheme.typography.labelLarge.copy(
                     fontWeight = FontWeight.Bold,
                     color = PrimaryGold,
                     letterSpacing = 3.sp
                 )
             )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.live_tv),
+                style = MaterialTheme.typography.bodyLarge,
+                color = White.copy(alpha = 0.45f)
+            )
 
-            Spacer(modifier = Modifier.height(28.dp))
+            Spacer(modifier = Modifier.height(22.dp))
 
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 items(categories) { category ->
                     val isSelected = category.id == selectedCategory?.id
                     Surface(
                         onClick = { onCategorySelected(category) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(56.dp),
-                        shape = ClickableSurfaceDefaults.shape(RoundedCornerShape(14.dp)),
+                            .height(58.dp),
+                        shape = ClickableSurfaceDefaults.shape(RoundedCornerShape(16.dp)),
                         colors = ClickableSurfaceDefaults.colors(
-                            containerColor = if (isSelected) Color.White.copy(alpha = 0.1f) else Color.Transparent,
-                            focusedContainerColor = White.copy(alpha = 0.22f),
-                            pressedContainerColor = White.copy(alpha = 0.28f)
+                            containerColor = if (isSelected) Color(0x331E2F4A) else Color.Transparent,
+                            focusedContainerColor = Color.White.copy(alpha = 0.16f),
+                            pressedContainerColor = Color.White.copy(alpha = 0.22f)
                         ),
-                        scale = ClickableSurfaceDefaults.scale(focusedScale = 1.04f),
+                        scale = ClickableSurfaceDefaults.scale(focusedScale = 1.03f),
                         border = ClickableSurfaceDefaults.border(
-                            focusedBorder = Border(BorderStroke(2.dp, PrimaryGold.copy(alpha = 0.55f)))
+                            focusedBorder = Border(BorderStroke(2.dp, PrimaryGold.copy(alpha = 0.75f)))
                         )
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 14.dp),
+                            modifier = Modifier.padding(horizontal = 16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(8.dp)
+                                    .background(
+                                        if (isSelected) PrimaryGold else Color.White.copy(alpha = 0.2f),
+                                        RoundedCornerShape(4.dp)
+                                    )
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
                             Text(
                                 text = category.name,
-                                style = MaterialTheme.typography.bodyLarge,
+                                style = MaterialTheme.typography.bodyLarge.copy(
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                                ),
                                 color = if (isSelected) PrimaryGold else White,
-                                maxLines = 1
+                                maxLines = 1,
+                                modifier = Modifier.weight(1f)
                             )
-                            Spacer(modifier = Modifier.weight(1f))
                             Text(
                                 text = stringResource(R.string.category_count_format, category.count),
                                 style = MaterialTheme.typography.labelLarge,
-                                color = White.copy(alpha = 0.38f)
+                                color = White.copy(alpha = 0.4f)
                             )
                         }
                     }
@@ -238,30 +307,35 @@ private fun ChannelCard(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .height(96.dp),
-        shape = ClickableSurfaceDefaults.shape(RoundedCornerShape(18.dp)),
+            .height(100.dp),
+        shape = ClickableSurfaceDefaults.shape(RoundedCornerShape(20.dp)),
         colors = ClickableSurfaceDefaults.colors(
-            containerColor = if (isSelected) Color(0x33E5C100) else Color.White.copy(alpha = 0.06f),
-            focusedContainerColor = Color.White.copy(alpha = 0.18f),
-            pressedContainerColor = Color.White.copy(alpha = 0.24f)
+            containerColor = if (isSelected) Color(0x4026C6DA) else Color.White.copy(alpha = 0.06f),
+            focusedContainerColor = Color.White.copy(alpha = 0.16f),
+            pressedContainerColor = Color.White.copy(alpha = 0.22f)
         ),
-        scale = ClickableSurfaceDefaults.scale(focusedScale = 1.04f),
+        scale = ClickableSurfaceDefaults.scale(focusedScale = 1.03f),
         border = ClickableSurfaceDefaults.border(
             focusedBorder = Border(BorderStroke(3.dp, PrimaryGold))
         )
     ) {
         Row(
-            modifier = Modifier.padding(14.dp),
+            modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
-                    .size(58.dp)
-                    .background(PureBlack, RoundedCornerShape(12.dp))
-                    .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(12.dp)),
+                    .size(60.dp)
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(Color(0xFF2A3444), PureBlack)
+                        ),
+                        RoundedCornerShape(14.dp)
+                    )
+                    .border(1.dp, PrimaryGold.copy(alpha = 0.25f), RoundedCornerShape(14.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = tvBadge, color = PrimaryGold.copy(alpha = 0.55f))
+                Text(text = tvBadge, color = PrimaryGold.copy(alpha = 0.75f))
             }
 
             Spacer(modifier = Modifier.width(14.dp))
@@ -288,35 +362,66 @@ private fun ChannelCard(
 private fun ChannelDetailBar(
     channel: Channel,
     hint: String,
+    programGuideTitle: String,
     statResolution: String,
     statCodec: String,
     statBitrate: String,
-    statFps: String
+    statFps: String,
+    epg1Time: String,
+    epg1Title: String,
+    epg2Time: String,
+    epg2Title: String
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        colors = SurfaceDefaults.colors(containerColor = Color(0xAA0F1419)),
-        border = Border(BorderStroke(1.dp, Color.White.copy(alpha = 0.1f)))
+        shape = RoundedCornerShape(22.dp),
+        colors = SurfaceDefaults.colors(containerColor = Color(0xB3141820)),
+        border = Border(BorderStroke(1.dp, Color.White.copy(alpha = 0.12f)))
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
-            Text(
-                text = channel.name,
-                style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
-                color = White
-            )
-            Spacer(modifier = Modifier.height(6.dp))
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Box(
+                    modifier = Modifier
+                        .background(PrimaryGold.copy(alpha = 0.25f), RoundedCornerShape(6.dp))
+                        .padding(horizontal = 10.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.player_live),
+                        style = MaterialTheme.typography.labelLarge.copy(
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp
+                        ),
+                        color = PrimaryGold
+                    )
+                }
+                Text(
+                    text = channel.name,
+                    style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
+                    color = White
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = hint,
                 style = MaterialTheme.typography.labelLarge,
-                color = White.copy(alpha = 0.5f)
+                color = White.copy(alpha = 0.48f)
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+            Spacer(modifier = Modifier.height(14.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(18.dp)
+            ) {
                 StatItem(statResolution, channel.resolution)
                 StatItem(statCodec, channel.codec)
                 StatItem(statBitrate, channel.bitrate)
                 StatItem(statFps, "${channel.fps}")
+            }
+            Spacer(modifier = Modifier.height(18.dp))
+            Text(programGuideTitle, style = MaterialTheme.typography.labelLarge, color = PrimaryGold)
+            Spacer(modifier = Modifier.height(8.dp))
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                EpgItem(epg1Time, epg1Title)
+                EpgItem(epg2Time, epg2Title)
             }
         }
     }

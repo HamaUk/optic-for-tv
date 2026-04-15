@@ -44,7 +44,7 @@ fun FullscreenPlayerScreen(
                 url = channel.url,
                 modifier = Modifier.fillMaxSize(),
                 showController = true,
-                controllerShowTimeoutMs = 8_000
+                controllerShowTimeoutMs = 4_000
             )
 
             Box(

@@ -33,7 +33,7 @@ fun VideoPlayer(
     url: String,
     modifier: Modifier = Modifier,
     showController: Boolean = false,
-    controllerShowTimeoutMs: Int = 5_000
+    controllerShowTimeoutMs: Int = 4_000
 ) {
     val context = LocalContext.current
     val appContext = context.applicationContext

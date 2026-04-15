@@ -2,33 +2,78 @@
 <resources>
     <string name="app_name">Optic TV Pro</string>
     <string name="login_title">OPTIC TV PRO</string>
-    <string name="login_subtitle">کۆدی چالاککردن داخڵ بکە</string>
+    <string name="login_subtitle">Enter your activation code</string>
     <string name="code_placeholder">•••• •••• ••••</string>
-    <string name="keypad_clear">سڕینەوە</string>
-    <string name="keypad_ok">باشە</string>
-    <string name="keypad_loading">تکایە چاوەڕێبە…</string>
-    <string name="error_invalid_code">کۆدەکە هەڵەیە یان بەسەرچووە</string>
-    <string name="error_connection">کێشەی پەیوەندیکردن: %1$s</string>
-    <string name="live_tv">تیڤی ڕاستەوخۆ</string>
+    <string name="keypad_clear">CLR</string>
+    <string name="keypad_ok">OK</string>
+    <string name="keypad_loading">Please wait…</string>
+    <string name="error_invalid_code">Invalid or expired code</string>
+    <string name="error_connection">Connection error: %1$s</string>
+    <string name="live_tv">Live TV</string>
     <string name="category_count_format">(%1$d)</string>
     <string name="tv_badge">TV</string>
     <string name="hd_bitrate_format">HD | %1$s</string>
-    <string name="channels_header">کەناڵەکان</string>
-    <string name="channels_count_format">کەناڵی %1$d</string>
-    <string name="channel_detail_hint">کەناڵێک هەڵبژێرە. باشە دابگرە بۆ سەیرکردن.</string>
-    <string name="program_guide">خشتەی بەرنامەکان</string>
-    <string name="stat_resolution">ڕوونی</string>
-    <string name="stat_codec">کۆدێک</string>
-    <string name="stat_bitrate">بایترەیت</string>
-    <string name="stat_fps">کوالیتی</string>
+    <string name="channels_header">Channels</string>
+    <string name="channels_count_format">%1$d channels</string>
+    <string name="channel_detail_hint">Focus a channel for details. Press OK to watch fullscreen.</string>
+    <string name="program_guide">Program guide</string>
+    <string name="stat_resolution">Resolution</string>
+    <string name="stat_codec">Codec</string>
+    <string name="stat_bitrate">Bitrate</string>
+    <string name="stat_fps">FPS</string>
     <string name="epg_item_1_time">00:00 – 01:00</string>
-    <string name="epg_item_1_title">بەشی یەکەم</string>
+    <string name="epg_item_1_title">The Midnight Movie</string>
     <string name="epg_item_2_time">01:00 – 02:00</string>
-    <string name="epg_item_2_title">بەشی دووەم</string>
-    <string name="playback_error">کێشەی پەخشکردن: %1$s</string>
-    <string name="playback_invalid_url">لینکی ئەم کەناڵە کار ناکات</string>
-    <string name="loading_channels">کەناڵەکان دادەبەزێت…</string>
-    <string name="player_back">گەڕانەوە</string>
-    <string name="player_live">ڕاستەوخۆ</string>
-    <string name="player_channel_missing">کەناڵەکە نەدۆزرایەوە</string>
+    <string name="epg_item_2_title">Global News Today</string>
+    <string name="playback_error">Playback error: %1$s</string>
+    <string name="playback_invalid_url">This channel has an invalid stream URL</string>
+    <string name="loading_channels">Loading channels…</string>
+    <string name="player_back">Back</string>
+    <string name="player_live">LIVE</string>
+    <string name="player_channel_missing">Channel not found</string>
+
+    <!-- Home hub -->
+    <string name="hub_welcome">Welcome</string>
+    <string name="hub_subtitle">Choose what you want to watch</string>
+    <string name="hub_live_title">Live TV</string>
+    <string name="hub_live_desc">Browse categories and channels</string>
+    <string name="hub_movies_title">Movies</string>
+    <string name="hub_movies_desc">On-demand library (coming soon)</string>
+    <string name="hub_settings_title">Settings</string>
+    <string name="hub_settings_desc">Playback, privacy, and advanced options</string>
+
+    <!-- Live TV header -->
+    <string name="nav_back_home">Home</string>
+    <string name="sidebar_categories">Categories</string>
+
+    <!-- Movies placeholder -->
+    <string name="movies_title">Movies</string>
+    <string name="movies_coming_soon">Coming soon</string>
+    <string name="movies_description">We are building a curated on-demand movie library with trailers and watchlists.</string>
+    <string name="movies_back">Back to home</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_subtitle">Tune playback, privacy, and system options</string>
+    <string name="settings_back">Back</string>
+    <string name="settings_section_playback">Playback</string>
+    <string name="settings_overlay_hide">Player overlay hides after 4 seconds</string>
+    <string name="settings_overlay_hide_desc">Play/pause and timeline auto-hide while watching (press D-pad to show again).</string>
+    <string name="settings_low_latency">Low-latency live mode</string>
+    <string name="settings_low_latency_desc">Reduces buffering for live streams (may increase instability on slow networks).</string>
+    <string name="settings_hw_decode">Prefer hardware decoder</string>
+    <string name="settings_hw_decode_desc">Uses device video hardware when available for smoother playback.</string>
+    <string name="settings_highest_quality">Prefer highest quality</string>
+    <string name="settings_highest_quality_desc">When the stream offers multiple levels, start at the highest bitrate.</string>
+    <string name="settings_section_privacy">Privacy &amp; safety</string>
+    <string name="settings_analytics">Usage &amp; diagnostics</string>
+    <string name="settings_analytics_desc">Help improve stability with anonymous error reports (no viewing history).</string>
+    <string name="settings_parental">Parental lock (UI only)</string>
+    <string name="settings_parental_desc">Shows a lock badge on restricted categories when enabled (full PIN in a future update).</string>
+    <string name="settings_section_data">Data</string>
+    <string name="settings_clear_cache">Clear app cache</string>
+    <string name="settings_clear_cache_desc">Frees temporary files. Login and preferences are kept.</string>
+    <string name="settings_cache_cleared">Cache cleared</string>
+    <string name="settings_section_about">About</string>
+    <string name="settings_version">Version %1$s</string>
 </resources>
