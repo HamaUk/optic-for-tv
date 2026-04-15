@@ -137,8 +137,7 @@ fun DashboardScreen(
                                     viewModel.selectChannel(channel)
                                     onPlayChannel(channel)
                                 },
-                                tvBadge = stringResource(R.string.tv_badge),
-                                bitrateLine = stringResource(R.string.hd_bitrate_format, channel.bitrate)
+                                tvBadge = stringResource(R.string.tv_badge)
                             )
                         }
                     }
@@ -146,16 +145,7 @@ fun DashboardScreen(
                     if (state.selectedChannel != null) {
                         ChannelDetailBar(
                             channel = state.selectedChannel!!,
-                            hint = stringResource(R.string.channel_detail_hint),
-                            programGuideTitle = stringResource(R.string.program_guide),
-                            statResolution = stringResource(R.string.stat_resolution),
-                            statCodec = stringResource(R.string.stat_codec),
-                            statBitrate = stringResource(R.string.stat_bitrate),
-                            statFps = stringResource(R.string.stat_fps),
-                            epg1Time = stringResource(R.string.epg_item_1_time),
-                            epg1Title = stringResource(R.string.epg_item_1_title),
-                            epg2Time = stringResource(R.string.epg_item_2_time),
-                            epg2Title = stringResource(R.string.epg_item_2_title)
+                            hint = stringResource(R.string.channel_detail_hint)
                         )
                     }
                 }
@@ -300,8 +290,7 @@ private fun ChannelCard(
     channel: Channel,
     isSelected: Boolean,
     onClick: () -> Unit,
-    tvBadge: String,
-    bitrateLine: String
+    tvBadge: String
 ) {
     Surface(
         onClick = onClick,
@@ -340,19 +329,13 @@ private fun ChannelCard(
 
             Spacer(modifier = Modifier.width(14.dp))
 
-            Column {
-                Text(
-                    text = channel.name,
-                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                    color = White,
-                    maxLines = 2
-                )
-                Text(
-                    text = bitrateLine,
-                    style = MaterialTheme.typography.labelLarge,
-                    color = White.copy(alpha = 0.42f)
-                )
-            }
+            Text(
+                text = channel.name,
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                color = White,
+                maxLines = 2,
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 }
@@ -361,16 +344,7 @@ private fun ChannelCard(
 @Composable
 private fun ChannelDetailBar(
     channel: Channel,
-    hint: String,
-    programGuideTitle: String,
-    statResolution: String,
-    statCodec: String,
-    statBitrate: String,
-    statFps: String,
-    epg1Time: String,
-    epg1Title: String,
-    epg2Time: String,
-    epg2Title: String
+    hint: String
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -406,61 +380,6 @@ private fun ChannelDetailBar(
                 style = MaterialTheme.typography.labelLarge,
                 color = White.copy(alpha = 0.48f)
             )
-            Spacer(modifier = Modifier.height(14.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(18.dp)
-            ) {
-                StatItem(statResolution, channel.resolution)
-                StatItem(statCodec, channel.codec)
-                StatItem(statBitrate, channel.bitrate)
-                StatItem(statFps, "${channel.fps}")
-            }
-            Spacer(modifier = Modifier.height(18.dp))
-            Text(programGuideTitle, style = MaterialTheme.typography.labelLarge, color = PrimaryGold)
-            Spacer(modifier = Modifier.height(8.dp))
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                EpgItem(epg1Time, epg1Title)
-                EpgItem(epg2Time, epg2Title)
-            }
         }
-    }
-}
-
-@Composable
-private fun StatItem(label: String, value: String) {
-    Column {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelLarge,
-            color = White.copy(alpha = 0.4f)
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-            color = PrimaryGold
-        )
-    }
-}
-
-@Composable
-private fun EpgItem(time: String, title: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White.copy(alpha = 0.06f), RoundedCornerShape(10.dp))
-            .padding(12.dp)
-    ) {
-        Text(
-            text = time,
-            style = MaterialTheme.typography.bodyLarge,
-            color = White.copy(alpha = 0.55f)
-        )
-        Spacer(modifier = Modifier.width(14.dp))
-        Text(
-            text = title,
-            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-            color = White
-        )
     }
 }

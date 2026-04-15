@@ -85,37 +85,32 @@ fun FullscreenPlayerScreen(
                         )
                     }
 
-                    Column(Modifier.weight(1f)) {
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .background(Color(0xCCDD0000), RoundedCornerShape(6.dp))
+                                .padding(horizontal = 10.dp, vertical = 4.dp)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.player_live),
+                                style = MaterialTheme.typography.labelLarge.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    letterSpacing = 1.5.sp
+                                ),
+                                color = White
+                            )
+                        }
                         Text(
                             text = channel.name,
                             style = MaterialTheme.typography.headlineLarge,
                             color = White,
-                            maxLines = 1
+                            maxLines = 1,
+                            modifier = Modifier.weight(1f)
                         )
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .background(Color(0xCCDD0000), RoundedCornerShape(6.dp))
-                                    .padding(horizontal = 10.dp, vertical = 4.dp)
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.player_live),
-                                    style = MaterialTheme.typography.labelLarge.copy(
-                                        fontWeight = FontWeight.Bold,
-                                        letterSpacing = 1.5.sp
-                                    ),
-                                    color = White
-                                )
-                            }
-                            Text(
-                                text = stringResource(R.string.hd_bitrate_format, channel.bitrate),
-                                style = MaterialTheme.typography.labelLarge,
-                                color = White.copy(alpha = 0.65f)
-                            )
-                        }
                     }
                 }
             }

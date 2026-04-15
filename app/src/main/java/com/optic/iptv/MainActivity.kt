@@ -1,6 +1,7 @@
 package com.optic.iptv
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.CompositionLocalProvider
@@ -15,6 +16,7 @@ import com.optic.iptv.ui.theme.OpticTVProTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.decorView.layoutDirection = View.LAYOUT_DIRECTION_LTR
         val startRoute = if (AuthPreferences.isLoggedIn(this)) {
             Screen.Home.route
         } else {
