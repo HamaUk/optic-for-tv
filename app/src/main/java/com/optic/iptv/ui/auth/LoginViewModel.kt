@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.FirebaseDatabase
 import com.optic.iptv.R
+import com.optic.iptv.data.auth.AuthPreferences
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -77,6 +78,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 }
 
                 if (found) {
+                    AuthPreferences.setLoggedIn(getApplication(), true)
                     _uiState.value = _uiState.value.copy(isLoading = false, isSuccess = true)
                 } else {
                     _uiState.value = _uiState.value.copy(

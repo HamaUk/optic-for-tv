@@ -76,4 +76,7 @@
     <string name="settings_cache_cleared">Cache cleared</string>
     <string name="settings_section_about">About</string>
     <string name="settings_version">Version %1$s</string>
+    <string name="settings_section_account">Account</string>
+    <string name="settings_sign_out">Sign out</string>
+    <string name="settings_sign_out_desc">Clear saved login on this device. You will enter your activation code again next time.</string>
 </resources>

@@ -30,6 +30,7 @@ import com.optic.iptv.ui.theme.*
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
+    onSignOut: () -> Unit,
     viewModel: SettingsViewModel = viewModel(
         factory = ViewModelProvider.AndroidViewModelFactory.getInstance(
             LocalContext.current.applicationContext as Application
@@ -176,6 +177,33 @@ fun SettingsScreen(
                                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
                             )
                         }
+                    }
+                }
+
+                SettingsSection(title = stringResource(R.string.settings_section_account)) {
+                    Text(
+                        text = stringResource(R.string.settings_sign_out_desc),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = White.copy(alpha = 0.45f)
+                    )
+                    Surface(
+                        onClick = onSignOut,
+                        shape = ClickableSurfaceDefaults.shape(RoundedCornerShape(12.dp)),
+                        colors = ClickableSurfaceDefaults.colors(
+                            containerColor = Color(0x33FFAA44),
+                            focusedContainerColor = PrimaryGold,
+                            contentColor = White,
+                            focusedContentColor = PureBlack
+                        ),
+                        border = ClickableSurfaceDefaults.border(
+                            focusedBorder = Border(BorderStroke(2.dp, White))
+                        )
+                    ) {
+                        Text(
+                            text = stringResource(R.string.settings_sign_out),
+                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                            modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
+                        )
                     }
                 }
 
