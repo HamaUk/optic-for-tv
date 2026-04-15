@@ -50,7 +50,7 @@ fun MoviesScreen(onBack: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Surface(
-                shape = SurfaceDefaults.shape(RoundedCornerShape(12.dp)),
+                shape = RoundedCornerShape(12.dp),
                 colors = SurfaceDefaults.colors(containerColor = Color(0x44E070FF))
             ) {
                 Text(

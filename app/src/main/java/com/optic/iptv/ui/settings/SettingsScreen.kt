@@ -239,7 +239,7 @@ private fun SettingsSection(
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = SurfaceDefaults.shape(RoundedCornerShape(20.dp)),
+        shape = RoundedCornerShape(20.dp),
         colors = SurfaceDefaults.colors(containerColor = Color(0x990F1419)),
         border = Border(BorderStroke(1.dp, Color.White.copy(alpha = 0.08f)))
     ) {
